@@ -1,30 +1,12 @@
-# Use an official Bun image as the base
-FROM oven/bun:1.1.21-alpine
-
-# Set the working directory
+# Local demo container. Authentication is required before public exposure.
+FROM oven/bun:1.4.2-alpine
 WORKDIR /app
-
-# Copy package.json, bun.lockb
-COPY package.json bun.lockb ./
-
-# Install dependencies using the lockfile for reproducible builds
-RUN bun install --frozen-lockfile
-
-# Copy the rest of the application code
-# This includes source files, public directory, and todos.sqlite
-COPY . .
-
-# Environment variable for the port, Fly.io will set this.
-# Default to 3000 if PORT is not set during local build/run.
-ENV PORT=3000
-
-# Expose the port the application runs on.
-# Fly.io will map this to external ports. The internal_port in fly.toml should match this.
-# However, Fly.io sets the PORT env var, which our app uses.
-# So, we expose what Fly.io expects internally.
-EXPOSE 8080
-
-# Command to run the application
-# The 'start' script in package.json should be `bun run index.ts`
-# Bun automatically picks up the PORT environment variable.
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production --ignore-scripts
+COPY app.ts db.ts index.ts ./
+COPY public ./public
+RUN mkdir /data && chown bun:bun /data
+USER bun
+ENV HOST=0.0.0.0 PORT=3000 DATABASE_PATH=/data/todos.sqlite
+EXPOSE 3000
 CMD ["bun", "run", "start"]

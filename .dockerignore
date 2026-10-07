@@ -1,31 +1,12 @@
-# Node modules
 node_modules/
-.bun/
-
-# Git stuff
 .git/
-.gitignore
-
-# Test files
+.bun/
+.env
+.env.*
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
 *.test.ts
-
-# Development specific files (if any)
-# .env
-
-# OS specific
-.DS_Store
-Thumbs.db
-
-# SQLite database file - we are including it in the image for this project
-# If we wanted an empty DB on each deploy, we'd uncomment this:
-# todos.sqlite
-# todos.sqlite-journal
-# todos.sqlite-wal
-
-# Docker specific
-Dockerfile
-.dockerignore
-
-# Fly.io specific
-fly.toml
-# README.md (optional, if you don't want it in the image)
+test-results/
+playwright-report/
