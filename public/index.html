@@ -6,10 +6,12 @@
     <title>Todo App</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37i7dUxdscwKGmMmksO" crossorigin="anonymous"></script>
+    <script src="/public/app.js" defer></script>
 </head>
 <body>
     <main class="container">
         <h1>Todo List</h1>
+        <div id="error-message-container" role="alert"></div>
 
         <!-- Section to display todos -->
         <section id="todo-list" hx-get="/todos" hx-trigger="load" hx-swap="innerHTML">
@@ -22,12 +24,12 @@
         <!-- Form to add new todos -->
         <section>
             <h2>Add New Todo</h2>
-            <form id="add-todo-form" hx-post="/todos" hx-target="#todo-list" hx-swap="beforeend" hx-on::after-request="this.reset()">
+            <form id="add-todo-form" hx-post="/todos" hx-target="#todo-list" hx-swap="beforeend">
                 <label for="title">Title</label>
-                <input type="text" id="title" name="title" required>
+                <input type="text" id="title" name="title" maxlength="200" required>
 
                 <label for="description">Description</label>
-                <textarea id="description" name="description"></textarea>
+                <textarea id="description" name="description" maxlength="4000"></textarea>
 
                 <button type="submit">Add Todo</button>
             </form>

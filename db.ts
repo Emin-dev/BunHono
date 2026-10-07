@@ -1,24 +1,26 @@
-import { Database } from "bun:sqlite";
+import { Database } from 'bun:sqlite'
 
-// Open or create the SQLite database file
-const db = new Database("todos.sqlite");
+export interface TodoRow {
+  id: number
+  title: string
+  description: string | null
+  status: string
+  created_at: string
+  updated_at: string
+}
 
-// SQL to create the todos table
-const createTableQuery = `
-  CREATE TABLE IF NOT EXISTS todos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT,
-    status TEXT NOT NULL DEFAULT 'pending',
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-  );
-`;
-
-// Execute the query to create the table
-db.query(createTableQuery).run();
-
-console.log("Table 'todos' created successfully or already exists.");
-
-// Export the database connection
-export default db;
+// The caller must choose the database. Importing this module never opens a file.
+export function createDatabase(filename: string): Database {
+  const db = new Database(filename, { create: true })
+  db.query(`
+    CREATE TABLE IF NOT EXISTS todos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+  `).run()
+  return db
+}
